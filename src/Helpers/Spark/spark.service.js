@@ -115,6 +115,7 @@ class SparkService {
       this.config = defaultConfig(network)
       this.config.apiKey = apiKey
       this.config.private_enabled_default = true // Enable private mode by default
+      this.config.syncIntervalSecs = 0 // Disable background sync (use manual event-based sync instead)
       console.log('[SparkService] Config created:', {
         network: this.config.network,
         syncIntervalSecs: this.config.syncIntervalSecs,
