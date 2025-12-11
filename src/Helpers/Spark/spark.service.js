@@ -292,14 +292,18 @@ class SparkService {
    * Sync wallet with event-based approach
    * Workaround for SDK 0.5.2 where syncWallet() promise doesn't resolve
    * but dataSynced event fires correctly
+   * @param timeoutMs - Timeout in milliseconds (default: 180000 = 3 minutes)
    */
-  async syncWalletWithEvent() {
+  async syncWalletWithEvent(timeoutMs = 180000) {
     if (!this.sdk) throw new Error('SDK not connected')
 
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
-        reject(new Error('Sync timeout after 60 seconds'))
-      }, 60000) // 60 second timeout
+        unsubscribe()
+        console.warn('[SparkService] Sync timeout after', timeoutMs / 1000, 'seconds - continuing anyway')
+        // Don't reject - just resolve to prevent blocking the UI
+        resolve()
+      }, timeoutMs)
 
       // Listen for dataSynced event
       const unsubscribe = this.onEvent((event) => {
