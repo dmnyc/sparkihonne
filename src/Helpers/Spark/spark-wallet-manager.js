@@ -479,7 +479,8 @@ class SparkWalletManager {
    */
   async syncWallet() {
     try {
-      await sparkService.syncWallet()
+      // Use event-based sync instead of promise-based (SDK 0.5.2 bug workaround)
+      await sparkService.syncWalletWithEvent()
       await this.refreshWalletState()
     } catch (error) {
       console.error('[SparkWalletManager] Failed to sync wallet:', error)
