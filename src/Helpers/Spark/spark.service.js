@@ -202,7 +202,12 @@ class SparkService {
         await this.sdk.disconnect()
         console.log('[SparkService] Disconnected')
       } catch (error) {
-        console.error('[SparkService] Error during disconnect:', error)
+        // Ignore sync errors during disconnect - SDK may try to sync internally
+        if (error.message && error.message.includes('RecvError')) {
+          console.log('[SparkService] Ignoring sync error during disconnect (expected)')
+        } else {
+          console.error('[SparkService] Error during disconnect:', error)
+        }
       }
     }
     this.sdk = null
