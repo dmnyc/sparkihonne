@@ -282,10 +282,27 @@ export default function SparkPaymentsList() {
               <div className="fx-centered fx-start-h">
                 {/* Show profile pic for incoming zaps, otherwise direction indicator */}
                 {!isOutgoing && isZap && senderProfile ? (
-                  <UserProfilePic
-                    user={senderProfile}
-                    size="small"
-                  />
+                  <div style={{ position: 'relative' }}>
+                    <UserProfilePic
+                      mainAccountUser={false}
+                      user_id={senderProfile.pubkey}
+                      size={48}
+                      img={senderProfile.picture}
+                    />
+                    <div
+                      className="round-icon-small round-icon-tooltip"
+                      data-tooltip={t('A4G4OJ7')}
+                      style={{
+                        position: 'absolute',
+                        scale: '.65',
+                        backgroundColor: 'var(--pale-gray)',
+                        right: '-8px',
+                        bottom: '-10px',
+                      }}
+                    >
+                      <p className="green-c">&#8595;</p>
+                    </div>
+                  </div>
                 ) : (
                   <>
                     {/* Direction indicator for non-zap payments */}
