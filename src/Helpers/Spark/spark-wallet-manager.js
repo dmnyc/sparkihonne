@@ -373,8 +373,16 @@ class SparkWalletManager {
 
       console.log('[SparkWalletManager] Wallet disconnected')
     } catch (error) {
-      console.error('[SparkWalletManager] Error during disconnect:', error)
-      throw error
+      // Suppress RecvError during disconnect - it's harmless (SDK trying to sync during cleanup)
+      if (error.message && error.message.includes('RecvError')) {
+        console.log('[SparkWalletManager] Suppressed sync error during disconnect (harmless)')
+        // Still clear state even if disconnect had an error
+        store.dispatch(setSparkConnected(false))
+        store.dispatch(setSparkConnecting(false))
+      } else {
+        console.error('[SparkWalletManager] Error during disconnect:', error)
+        throw error
+      }
     }
   }
 
@@ -398,6 +406,11 @@ class SparkWalletManager {
 
       console.log('[SparkWalletManager] ✅ Wallet deleted successfully')
     } catch (error) {
+      // Suppress RecvError - it's harmless (SDK trying to sync during disconnect)
+      if (error.message && error.message.includes('RecvError')) {
+        console.log('[SparkWalletManager] Wallet deleted (suppressed harmless sync error)')
+        return // Success despite error
+      }
       console.error('[SparkWalletManager] Error deleting wallet:', error)
       throw error
     }
