@@ -256,6 +256,19 @@ class SparkWalletManager {
       console.error('[SparkWalletManager] Failed to restore wallet:', error)
       store.dispatch(setSparkConnecting(false))
       store.dispatch(setSparkConnected(false))
+
+      // If it's a WASM error, clear the corrupted storage
+      if (error.message && error.message.includes('memory access out of bounds')) {
+        console.warn('[SparkWalletManager] WASM error detected - clearing corrupted storage')
+        try {
+          const pubkey = this.getUserPubkey()
+          await sparkStorage.deleteMnemonic(pubkey)
+          console.log('[SparkWalletManager] Corrupted backup cleared. Please restore from seed phrase.')
+        } catch (cleanupError) {
+          console.error('[SparkWalletManager] Failed to cleanup:', cleanupError)
+        }
+      }
+
       throw error
     }
   }

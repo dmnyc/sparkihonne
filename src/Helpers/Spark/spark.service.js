@@ -112,9 +112,8 @@ class SparkService {
     }
 
     if (this.connecting) {
-      console.warn('[SparkService] Connection already in progress, but no SDK instance. Resetting...')
-      // Reset the flag if we're stuck (e.g., from a previous failed attempt)
-      this.connecting = false
+      console.warn('[SparkService] Connection already in progress - rejecting duplicate attempt')
+      throw new Error('Connection already in progress. Please wait.')
     }
 
     this.connecting = true
