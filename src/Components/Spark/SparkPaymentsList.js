@@ -437,17 +437,17 @@ export default function SparkPaymentsList() {
                   </div>
                 )}
 
-                {/* Payment Hash (if available) */}
-                {payment.paymentHash && (
+                {/* Payment Hash (if available) - moved to htlcDetails in SDK 0.9.0 */}
+                {(payment.details?.htlcDetails?.paymentHash || payment.paymentHash) && (
                   <div className="fit-container fx-col" style={{ gap: 'var(--4)' }}>
                     <p className="gray-c p-small">{t('Payment Hash')}:</p>
                     <div className="fx-scattered fit-container" style={{ gap: 'var(--8)' }}>
                       <p className="p-small" style={{ fontFamily: 'monospace', fontSize: '0.75em', wordBreak: 'break-all', flex: 1 }}>
-                        {payment.paymentHash}
+                        {payment.details?.htlcDetails?.paymentHash || payment.paymentHash}
                       </p>
                       <div
                         className="round-icon-small pointer"
-                        onClick={() => copyToClipboard(payment.paymentHash, t('Payment Hash'))}
+                        onClick={() => copyToClipboard(payment.details?.htlcDetails?.paymentHash || payment.paymentHash, t('Payment Hash'))}
                         title={t('Copy')}
                       >
                         <div className="copy"></div>
@@ -456,17 +456,17 @@ export default function SparkPaymentsList() {
                   </div>
                 )}
 
-                {/* Preimage (if available) */}
-                {payment.preimage && (
+                {/* Preimage (if available) - moved to htlcDetails in SDK 0.9.0 */}
+                {(payment.details?.htlcDetails?.preimage || payment.preimage) && (
                   <div className="fit-container fx-col" style={{ gap: 'var(--4)' }}>
                     <p className="gray-c p-small">{t('Preimage')}:</p>
                     <div className="fx-scattered fit-container" style={{ gap: 'var(--8)' }}>
                       <p className="p-small" style={{ fontFamily: 'monospace', fontSize: '0.75em', wordBreak: 'break-all', flex: 1 }}>
-                        {payment.preimage}
+                        {payment.details?.htlcDetails?.preimage || payment.preimage}
                       </p>
                       <div
                         className="round-icon-small pointer"
-                        onClick={() => copyToClipboard(payment.preimage, t('Preimage'))}
+                        onClick={() => copyToClipboard(payment.details?.htlcDetails?.preimage || payment.preimage, t('Preimage'))}
                         title={t('Copy')}
                       >
                         <div className="copy"></div>

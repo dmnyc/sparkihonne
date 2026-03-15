@@ -160,8 +160,10 @@ class SparkZapReceiptService {
       ['p', zapRequest.pubkey] // Sender (zapper)
     ]
 
-    // Add preimage if available
-    const preimage = payment.details?.type === 'lightning' ? payment.details.preimage : undefined
+    // Add preimage if available (moved to htlc_details in SDK 0.9.0)
+    const preimage = payment.details?.type === 'lightning'
+      ? (payment.details.htlcDetails?.preimage || payment.details.preimage)
+      : undefined
     if (preimage) {
       tags.push(['preimage', preimage])
     }

@@ -451,7 +451,8 @@ const Cashier = ({
 
       // Extract preimage from Breez SDK response
       // The response is a payment object: { id, paymentType, status, amount, fees, timestamp, method, details }
-      const preimage = response?.details?.preimage || response?.preimage || '';
+      // In SDK 0.9.0+, preimage moved to details.htlcDetails
+      const preimage = response?.details?.htlcDetails?.preimage || response?.details?.preimage || response?.preimage || '';
       const paymentStatus = response?.status || '';
 
       console.log('[PaymentGateway] Preimage:', preimage, 'Status:', paymentStatus);

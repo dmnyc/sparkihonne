@@ -161,11 +161,11 @@ class SparkService {
       this.config = defaultConfig(network)
       this.config.apiKey = apiKey
 
-      // Note: private mode config may not be available in SDK 0.5.2
       // Only set if the property exists in the config object
       if ('privateEnabledDefault' in this.config) {
         this.config.privateEnabledDefault = true
       }
+      this.config.supportLnurlVerify = true
 
       console.log('[SparkService] Config created:', {
         network: this.config.network,
@@ -383,8 +383,8 @@ class SparkService {
 
   /**
    * Sync wallet with event-based approach
-   * Workaround for SDK 0.5.2 where syncWallet() promise doesn't resolve
-   * but dataSynced event fires correctly
+   * Workaround where syncWallet() promise doesn't resolve
+   * but synced event fires correctly
    */
   async syncWalletWithEvent() {
     if (!this.sdk) throw new Error('SDK not connected')
@@ -394,12 +394,12 @@ class SparkService {
         reject(new Error('Sync timeout after 60 seconds'))
       }, 60000) // 60 second timeout
 
-      // Listen for dataSynced event
+      // Listen for synced event (renamed from dataSynced in SDK 0.6.3)
       const unsubscribe = this.onEvent((event) => {
-        if (event.type === 'dataSynced') {
+        if (event.type === 'synced') {
           clearTimeout(timeout)
           unsubscribe()
-          console.log('[SparkService] ✅ Wallet synced (via dataSynced event)')
+          console.log('[SparkService] ✅ Wallet synced (via synced event)')
           resolve()
         }
       })
